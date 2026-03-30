@@ -23,8 +23,9 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
-      {/* Sheet */}
-      <div className="relative w-full bg-white rounded-t-3xl shadow-2xl z-10 max-h-[92vh] flex flex-col">
+      {/* Sheet — sits above the bottom nav bar */}
+      <div className="relative w-full bg-white rounded-t-3xl shadow-2xl z-10 flex flex-col"
+           style={{ maxHeight: 'calc(92vh - 64px - env(safe-area-inset-bottom))', marginBottom: 'calc(64px + env(safe-area-inset-bottom))' }}>
         {/* Handle */}
         <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
           <div className="w-10 h-1 bg-gray-300 rounded-full" />
@@ -46,7 +47,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         {/* Sticky footer (submit button lives here) */}
         {footer && (
           <div className="flex-shrink-0 px-5 pt-2 border-t border-gray-100"
-               style={{ paddingBottom: 'calc(72px + env(safe-area-inset-bottom))' }}>
+               style={{ paddingBottom: '20px' }}>
             {footer}
           </div>
         )}
