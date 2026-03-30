@@ -6,10 +6,10 @@ interface ModalProps {
   onClose: () => void
   title: string
   children: ReactNode
+  footer?: ReactNode
 }
 
-export function Modal({ open, onClose, title, children }: ModalProps) {
-  // Prevent body scroll when modal open
+export function Modal({ open, onClose, title, children, footer }: ModalProps) {
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden'
     else document.body.style.overflow = ''
@@ -24,25 +24,32 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       {/* Sheet */}
-      <div className="relative w-full bg-white rounded-t-3xl shadow-2xl z-10 max-h-[90vh] flex flex-col"
-           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <div className="relative w-full bg-white rounded-t-3xl shadow-2xl z-10 max-h-[92vh] flex flex-col">
         {/* Handle */}
-        <div className="flex justify-center pt-3 pb-1">
+        <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
           <div className="w-10 h-1 bg-gray-300 rounded-full" />
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 flex-shrink-0">
           <h2 className="text-base font-semibold text-gray-900">{title}</h2>
           <button onClick={onClose} className="p-1 text-gray-400 active:opacity-60">
             <X size={20} />
           </button>
         </div>
 
-        {/* Content */}
+        {/* Scrollable content */}
         <div className="overflow-y-auto flex-1 px-5 py-4">
           {children}
         </div>
+
+        {/* Sticky footer (submit button lives here) */}
+        {footer && (
+          <div className="flex-shrink-0 px-5 pb-5 pt-2 border-t border-gray-100"
+               style={{ paddingBottom: 'max(20px, env(safe-area-inset-bottom))' }}>
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   )
