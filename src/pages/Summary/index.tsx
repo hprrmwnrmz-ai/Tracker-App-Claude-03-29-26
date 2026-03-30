@@ -9,6 +9,7 @@ import { MetricCard } from '../../components/ui/MetricCard'
 import { StatCard } from '../../components/ui/StatCard'
 import { Card } from '../../components/ui/Card'
 import { SectionHeader } from '../../components/ui/SectionHeader'
+import { MedLevelChart, totalMedLevel } from '../../components/shots/MedLevelChart'
 import { ShotFormModal } from '../Shots/ShotForm'
 import { WeightFormModal } from '../Results/WeightForm'
 import { FoodFormModal } from '../FoodLog/FoodForm'
@@ -160,17 +161,18 @@ export function SummaryPage() {
             <StatCard icon="💉" label="Shots taken" value={shots.length} />
             <StatCard icon="📦" label="Last dose"
               value={shots[0] ? `${shots[0].dose}mg` : '—'} accent />
-            <button
-              onClick={() => setShotModalOpen(true)}
-              className="bg-white rounded-2xl shadow-sm flex items-center justify-center active:opacity-70 transition-opacity aspect-square"
-            >
-              <div className="w-10 h-10 rounded-full border-2 flex items-center justify-center"
-                   style={{ borderColor: 'var(--accent-color)' }}>
-                <Plus size={20} style={{ color: 'var(--accent-color)' }} />
-              </div>
-            </button>
+            <StatCard icon="📈" label="Est. level"
+              value={`${totalMedLevel(shots, new Date()).toFixed(2)}mg`} />
           </div>
         </div>
+      </div>
+
+      {/* Estimated Medication Levels Chart — full-bleed below padding */}
+      <div className="px-4 pb-2">
+        <MedLevelChart shots={shots} />
+      </div>
+
+      <div className="px-4 space-y-5 pb-4">
 
         {/* Journey CTA */}
         <Card onClick={() => navigate('/results')} className="flex items-center justify-between">
