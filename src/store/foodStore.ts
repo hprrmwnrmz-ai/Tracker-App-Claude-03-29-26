@@ -1,6 +1,7 @@
 import { StateCreator } from 'zustand'
 import { FoodEntry } from '../types/food'
 import { format } from 'date-fns'
+import { dbFoods } from '../services/db'
 
 export interface FoodSlice {
   foods: FoodEntry[]
@@ -14,14 +15,22 @@ export interface FoodSlice {
 export const createFoodSlice: StateCreator<FoodSlice> = (set, get) => ({
   foods: [],
 
-  addFood: (entry) =>
-    set((s) => ({ foods: [{ ...entry, id: crypto.randomUUID() }, ...s.foods] })),
+  addFood: (entry) => {
+    const newEntry: FoodEntry = { ...entry, id: crypto.randomUUID() }
+    set((s) => ({ foods: [newEntry, ...s.foods] }))
+    dbFoods.insert(newEntry)
+  },
 
-  updateFood: (id, updates) =>
-    set((s) => ({ foods: s.foods.map((f) => (f.id === id ? { ...f, ...updates } : f)) })),
+  updateFood: (id, updates) => {
+    set((s) => ({ foods: s.foods.map((f) => (f.id === id ? { ...f, ...updates } : f)) }))
+    const updated = get().foods.find((f) => f.id === id)
+    if (updated) dbFoods.update(updated)
+  },
 
-  deleteFood: (id) =>
-    set((s) => ({ foods: s.foods.filter((f) => f.id !== id) })),
+  deleteFood: (id) => {
+    set((s) => ({ foods: s.foods.filter((f) => f.id !== id) }))
+    dbFoods.delete(id)
+  },
 
   getFoodsForDate: (date) => {
     const dateStr = format(date, 'yyyy-MM-dd')

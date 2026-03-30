@@ -1,6 +1,7 @@
 import { StateCreator } from 'zustand'
 import { ExerciseEntry } from '../types/exercise'
-import { format, startOfWeek, endOfWeek } from 'date-fns'
+import { startOfWeek, endOfWeek } from 'date-fns'
+import { dbExercises } from '../services/db'
 
 export interface ExerciseSlice {
   exercises: ExerciseEntry[]
@@ -14,14 +15,22 @@ export interface ExerciseSlice {
 export const createExerciseSlice: StateCreator<ExerciseSlice> = (set, get) => ({
   exercises: [],
 
-  addExercise: (entry) =>
-    set((s) => ({ exercises: [{ ...entry, id: crypto.randomUUID() }, ...s.exercises] })),
+  addExercise: (entry) => {
+    const newEntry: ExerciseEntry = { ...entry, id: crypto.randomUUID() }
+    set((s) => ({ exercises: [newEntry, ...s.exercises] }))
+    dbExercises.insert(newEntry)
+  },
 
-  updateExercise: (id, updates) =>
-    set((s) => ({ exercises: s.exercises.map((e) => (e.id === id ? { ...e, ...updates } : e)) })),
+  updateExercise: (id, updates) => {
+    set((s) => ({ exercises: s.exercises.map((e) => (e.id === id ? { ...e, ...updates } : e)) }))
+    const updated = get().exercises.find((e) => e.id === id)
+    if (updated) dbExercises.update(id, updated)
+  },
 
-  deleteExercise: (id) =>
-    set((s) => ({ exercises: s.exercises.filter((e) => e.id !== id) })),
+  deleteExercise: (id) => {
+    set((s) => ({ exercises: s.exercises.filter((e) => e.id !== id) }))
+    dbExercises.delete(id)
+  },
 
   getExercisesForDate: (dateStr) =>
     get().exercises.filter((e) => e.timestamp.startsWith(dateStr)),

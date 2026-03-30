@@ -1,8 +1,9 @@
 import { StateCreator } from 'zustand'
 import { ShotEntry, InjectionSite, INJECTION_SITE_ROTATION } from '../types/shot'
+import { dbShots } from '../services/db'
 
-// Seed data from user's Zepbound history
-const SEED_SHOTS: ShotEntry[] = [
+// Seed data from user's Zepbound history (imported on first login)
+export const SEED_SHOTS: ShotEntry[] = [
   { id: 's1',  timestamp: '2025-12-31T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-left',  notes: '' },
   { id: 's2',  timestamp: '2026-01-07T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-right', notes: '' },
   { id: 's3',  timestamp: '2026-01-13T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-left',  notes: '' },
@@ -31,22 +32,30 @@ export interface ShotSlice {
 }
 
 export const createShotSlice: StateCreator<ShotSlice> = (set, get) => ({
-  shots: SEED_SHOTS,
+  shots: [],
 
-  addShot: (shot) =>
+  addShot: (shot) => {
+    const newShot: ShotEntry = { ...shot, id: crypto.randomUUID() }
     set((s) => ({
-      shots: [{ ...shot, id: crypto.randomUUID() }, ...s.shots].sort(
+      shots: [newShot, ...s.shots].sort(
         (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       ),
-    })),
+    }))
+    dbShots.insert(newShot)
+  },
 
-  updateShot: (id, updates) =>
+  updateShot: (id, updates) => {
     set((s) => ({
       shots: s.shots.map((sh) => (sh.id === id ? { ...sh, ...updates } : sh)),
-    })),
+    }))
+    const updated = get().shots.find((sh) => sh.id === id)
+    if (updated) dbShots.update(updated)
+  },
 
-  deleteShot: (id) =>
-    set((s) => ({ shots: s.shots.filter((sh) => sh.id !== id) })),
+  deleteShot: (id) => {
+    set((s) => ({ shots: s.shots.filter((sh) => sh.id !== id) }))
+    dbShots.delete(id)
+  },
 
   getNextSite: () => {
     const { shots } = get()
@@ -56,21 +65,14 @@ export const createShotSlice: StateCreator<ShotSlice> = (set, get) => ({
     return INJECTION_SITE_ROTATION[(lastIdx + 1) % INJECTION_SITE_ROTATION.length]
   },
 
-  getLastShot: () => {
-    const { shots } = get()
-    return shots[0]
-  },
+  getLastShot: () => get().shots[0],
 
   getDaysSinceLastShot: () => {
     const { shots } = get()
     if (shots.length === 0) return Infinity
     const last = new Date(shots[0].timestamp)
-    const now = new Date()
-    return Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24))
+    return Math.floor((Date.now() - last.getTime()) / (1000 * 60 * 60 * 24))
   },
 
-  getDaysUntilNextShot: () => {
-    const daysSince = get().getDaysSinceLastShot()
-    return 7 - daysSince
-  },
+  getDaysUntilNextShot: () => 7 - get().getDaysSinceLastShot(),
 })

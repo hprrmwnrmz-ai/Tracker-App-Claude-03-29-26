@@ -1,6 +1,7 @@
 import { StateCreator } from 'zustand'
 import { Bill, BillPayment } from '../types/bill'
 import { format, getDaysInMonth, setDate } from 'date-fns'
+import { dbBills, dbBillPayments } from '../services/db'
 
 export interface BillSlice {
   bills: Bill[]
@@ -19,17 +20,25 @@ export const createBillSlice: StateCreator<BillSlice> = (set, get) => ({
   bills: [],
   billPayments: [],
 
-  addBill: (bill) =>
-    set((s) => ({ bills: [...s.bills, { ...bill, id: crypto.randomUUID() }] })),
+  addBill: (bill) => {
+    const newBill: Bill = { ...bill, id: crypto.randomUUID() }
+    set((s) => ({ bills: [...s.bills, newBill] }))
+    dbBills.insert(newBill)
+  },
 
-  updateBill: (id, updates) =>
-    set((s) => ({ bills: s.bills.map((b) => (b.id === id ? { ...b, ...updates } : b)) })),
+  updateBill: (id, updates) => {
+    set((s) => ({ bills: s.bills.map((b) => (b.id === id ? { ...b, ...updates } : b)) }))
+    const updated = get().bills.find((b) => b.id === id)
+    if (updated) dbBills.update(id, updated)
+  },
 
-  deleteBill: (id) =>
+  deleteBill: (id) => {
     set((s) => ({
       bills: s.bills.filter((b) => b.id !== id),
       billPayments: s.billPayments.filter((p) => p.billId !== id),
-    })),
+    }))
+    dbBills.delete(id)
+  },
 
   markBillPaid: (billId, amount) => {
     const bill = get().bills.find((b) => b.id === billId)
@@ -44,10 +53,13 @@ export const createBillSlice: StateCreator<BillSlice> = (set, get) => ({
       notes: '',
     }
     set((s) => ({ billPayments: [...s.billPayments, payment] }))
+    dbBillPayments.insert(payment)
   },
 
-  unmarkBillPaid: (paymentId) =>
-    set((s) => ({ billPayments: s.billPayments.filter((p) => p.id !== paymentId) })),
+  unmarkBillPaid: (paymentId) => {
+    set((s) => ({ billPayments: s.billPayments.filter((p) => p.id !== paymentId) }))
+    dbBillPayments.delete(paymentId)
+  },
 
   isCurrentPeriodPaid: (billId) => {
     const currentPeriod = format(new Date(), 'MMMM yyyy')

@@ -1,5 +1,6 @@
 import { StateCreator } from 'zustand'
 import { WorkNote } from '../types/work'
+import { dbWorkNotes } from '../services/db'
 
 export interface WorkSlice {
   workNotes: WorkNote[]
@@ -13,14 +14,22 @@ export interface WorkSlice {
 export const createWorkSlice: StateCreator<WorkSlice> = (set, get) => ({
   workNotes: [],
 
-  addWorkNote: (note) =>
-    set((s) => ({ workNotes: [{ ...note, id: crypto.randomUUID() }, ...s.workNotes] })),
+  addWorkNote: (note) => {
+    const newNote: WorkNote = { ...note, id: crypto.randomUUID() }
+    set((s) => ({ workNotes: [newNote, ...s.workNotes] }))
+    dbWorkNotes.insert(newNote)
+  },
 
-  updateWorkNote: (id, updates) =>
-    set((s) => ({ workNotes: s.workNotes.map((n) => (n.id === id ? { ...n, ...updates } : n)) })),
+  updateWorkNote: (id, updates) => {
+    set((s) => ({ workNotes: s.workNotes.map((n) => (n.id === id ? { ...n, ...updates } : n)) }))
+    const updated = get().workNotes.find((n) => n.id === id)
+    if (updated) dbWorkNotes.update(id, updated)
+  },
 
-  deleteWorkNote: (id) =>
-    set((s) => ({ workNotes: s.workNotes.filter((n) => n.id !== id) })),
+  deleteWorkNote: (id) => {
+    set((s) => ({ workNotes: s.workNotes.filter((n) => n.id !== id) }))
+    dbWorkNotes.delete(id)
+  },
 
   getWorkNotesForDate: (dateStr) =>
     get().workNotes.filter((n) => n.timestamp.startsWith(dateStr)),
