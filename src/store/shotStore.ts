@@ -4,20 +4,20 @@ import { dbShots } from '../services/db'
 
 // Seed data from user's Zepbound history (imported on first login)
 export const SEED_SHOTS: ShotEntry[] = [
-  { id: 's1',  timestamp: '2025-12-31T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-left',  notes: '' },
-  { id: 's2',  timestamp: '2026-01-07T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-right', notes: '' },
-  { id: 's3',  timestamp: '2026-01-13T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-left',  notes: '' },
-  { id: 's4',  timestamp: '2026-01-20T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-right', notes: '' },
-  { id: 's5',  timestamp: '2026-01-27T10:00:00.000Z', dose: 3.25, site: 'thigh-left',          notes: '' },
-  { id: 's6',  timestamp: '2026-02-03T10:00:00.000Z', dose: 3.25, site: 'thigh-right',         notes: '' },
-  { id: 's7',  timestamp: '2026-02-10T10:00:00.000Z', dose: 3.25, site: 'upper-arm-left',      notes: '' },
-  { id: 's8',  timestamp: '2026-02-17T10:00:00.000Z', dose: 3.25, site: 'upper-arm-right',     notes: '' },
-  { id: 's9',  timestamp: '2026-02-24T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-left',  notes: '' },
-  { id: 's10', timestamp: '2026-03-03T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-right', notes: '' },
-  { id: 's11', timestamp: '2026-03-10T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-left',  notes: '' },
-  { id: 's12', timestamp: '2026-03-17T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-right', notes: '' },
-  { id: 's13', timestamp: '2026-03-23T10:00:00.000Z', dose: 5,    site: 'thigh-left',          notes: 'Dose increased to 5mg' },
-  { id: 's14', timestamp: '2026-03-29T10:00:00.000Z', dose: 5,    site: 'thigh-right',         notes: '' },
+  { id: '00000000-0000-0000-0000-000000000001', timestamp: '2025-12-31T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-left',  notes: '' },
+  { id: '00000000-0000-0000-0000-000000000002', timestamp: '2026-01-07T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-right', notes: '' },
+  { id: '00000000-0000-0000-0000-000000000003', timestamp: '2026-01-13T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-left',  notes: '' },
+  { id: '00000000-0000-0000-0000-000000000004', timestamp: '2026-01-20T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-right', notes: '' },
+  { id: '00000000-0000-0000-0000-000000000005', timestamp: '2026-01-27T10:00:00.000Z', dose: 3.25, site: 'thigh-left',          notes: '' },
+  { id: '00000000-0000-0000-0000-000000000006', timestamp: '2026-02-03T10:00:00.000Z', dose: 3.25, site: 'thigh-right',         notes: '' },
+  { id: '00000000-0000-0000-0000-000000000007', timestamp: '2026-02-10T10:00:00.000Z', dose: 3.25, site: 'upper-arm-left',      notes: '' },
+  { id: '00000000-0000-0000-0000-000000000008', timestamp: '2026-02-17T10:00:00.000Z', dose: 3.25, site: 'upper-arm-right',     notes: '' },
+  { id: '00000000-0000-0000-0000-000000000009', timestamp: '2026-02-24T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-left',  notes: '' },
+  { id: '00000000-0000-0000-0000-000000000010', timestamp: '2026-03-03T10:00:00.000Z', dose: 3.25, site: 'abdomen-lower-right', notes: '' },
+  { id: '00000000-0000-0000-0000-000000000011', timestamp: '2026-03-10T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-left',  notes: '' },
+  { id: '00000000-0000-0000-0000-000000000012', timestamp: '2026-03-17T10:00:00.000Z', dose: 3.25, site: 'abdomen-upper-right', notes: '' },
+  { id: '00000000-0000-0000-0000-000000000013', timestamp: '2026-03-23T10:00:00.000Z', dose: 5,    site: 'thigh-left',          notes: 'Dose increased to 5mg' },
+  { id: '00000000-0000-0000-0000-000000000014', timestamp: '2026-03-29T10:00:00.000Z', dose: 5,    site: 'thigh-right',         notes: '' },
 ]
 
 export interface ShotSlice {
