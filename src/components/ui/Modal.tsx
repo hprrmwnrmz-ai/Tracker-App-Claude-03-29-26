@@ -45,8 +45,8 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
 
         {/* Sticky footer (submit button lives here) */}
         {footer && (
-          <div className="flex-shrink-0 px-5 pb-5 pt-2 border-t border-gray-100"
-               style={{ paddingBottom: 'max(20px, env(safe-area-inset-bottom))' }}>
+          <div className="flex-shrink-0 px-5 pt-2 border-t border-gray-100"
+               style={{ paddingBottom: 'calc(72px + env(safe-area-inset-bottom))' }}>
             {footer}
           </div>
         )}
