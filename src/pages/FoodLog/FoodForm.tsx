@@ -48,8 +48,16 @@ export function FoodFormModal({ open, onClose, editing, defaultDate }: FoodFormM
     onClose()
   }
 
+  const submitButton = (
+    <button onClick={handleSubmit}
+      className="w-full py-3 rounded-2xl text-white font-semibold text-sm active:opacity-80"
+      style={{ backgroundColor: 'var(--accent-color)' }}>
+      {editing ? 'Save Changes' : 'Log Food'}
+    </button>
+  )
+
   return (
-    <Modal open={open} onClose={onClose} title={editing ? 'Edit Food' : 'Log Food'}>
+    <Modal open={open} onClose={onClose} title={editing ? 'Edit Food' : 'Log Food'} footer={submitButton}>
       <div className="space-y-4">
         {/* Meal type */}
         <div>
@@ -102,11 +110,6 @@ export function FoodFormModal({ open, onClose, editing, defaultDate }: FoodFormM
             className="mt-1.5 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-accent" />
         </div>
 
-        <button onClick={handleSubmit}
-          className="w-full py-3 rounded-2xl text-white font-semibold text-sm active:opacity-80"
-          style={{ backgroundColor: 'var(--accent-color)' }}>
-          {editing ? 'Save Changes' : 'Log Food'}
-        </button>
       </div>
     </Modal>
   )

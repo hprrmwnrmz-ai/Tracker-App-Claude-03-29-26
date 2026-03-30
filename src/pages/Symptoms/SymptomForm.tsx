@@ -33,8 +33,16 @@ export function SymptomFormModal({ open, onClose, editing }: SymptomFormModalPro
     onClose()
   }
 
+  const submitButton = (
+    <button onClick={handleSubmit} disabled={selected.length === 0}
+      className="w-full py-3 rounded-2xl text-white font-semibold text-sm active:opacity-80 disabled:opacity-50"
+      style={{ backgroundColor: 'var(--accent-color)' }}>
+      {editing ? 'Save Changes' : 'Log Side Effects'}
+    </button>
+  )
+
   return (
-    <Modal open={open} onClose={onClose} title="Log Side Effects">
+    <Modal open={open} onClose={onClose} title="Log Side Effects" footer={submitButton}>
       <div className="space-y-4">
         <div>
           <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Symptoms</label>
@@ -79,11 +87,6 @@ export function SymptomFormModal({ open, onClose, editing }: SymptomFormModalPro
             rows={2} className="mt-1.5 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-accent resize-none" />
         </div>
 
-        <button onClick={handleSubmit} disabled={selected.length === 0}
-          className="w-full py-3 rounded-2xl text-white font-semibold text-sm active:opacity-80 disabled:opacity-50"
-          style={{ backgroundColor: 'var(--accent-color)' }}>
-          {editing ? 'Save Changes' : 'Log Side Effects'}
-        </button>
       </div>
     </Modal>
   )

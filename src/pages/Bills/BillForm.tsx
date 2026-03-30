@@ -38,8 +38,16 @@ export function BillFormModal({ open, onClose, editing }: BillFormModalProps) {
     onClose()
   }
 
+  const submitButton = (
+    <button onClick={handleSubmit}
+      className="w-full py-3 rounded-2xl text-white font-semibold text-sm active:opacity-80"
+      style={{ backgroundColor: 'var(--accent-color)' }}>
+      {editing ? 'Save Changes' : 'Add Bill'}
+    </button>
+  )
+
   return (
-    <Modal open={open} onClose={onClose} title={editing ? 'Edit Bill' : 'Add Bill'}>
+    <Modal open={open} onClose={onClose} title={editing ? 'Edit Bill' : 'Add Bill'} footer={submitButton}>
       <div className="space-y-4">
         <div>
           <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</label>
@@ -97,11 +105,6 @@ export function BillFormModal({ open, onClose, editing }: BillFormModalProps) {
           <span className="text-sm font-medium text-gray-700">Autopay</span>
         </label>
 
-        <button onClick={handleSubmit}
-          className="w-full py-3 rounded-2xl text-white font-semibold text-sm active:opacity-80"
-          style={{ backgroundColor: 'var(--accent-color)' }}>
-          {editing ? 'Save Changes' : 'Add Bill'}
-        </button>
       </div>
     </Modal>
   )
