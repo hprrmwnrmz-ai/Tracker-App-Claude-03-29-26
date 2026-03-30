@@ -16,6 +16,7 @@ export interface AppSettings {
   reminderHour: number;
   reminderMinute: number;
   currentDose: number;
+  shotIntervalDays: number;
   startDate: string;
   goalWeightLbs: number;
   heightInches?: number; // for BMI calculation
@@ -29,6 +30,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   reminderHour: 9,
   reminderMinute: 0,
   currentDose: 5,
+  shotIntervalDays: 7,
   startDate: '2025-12-31',
   goalWeightLbs: 0,
 };

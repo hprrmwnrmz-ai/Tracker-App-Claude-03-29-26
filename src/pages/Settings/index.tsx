@@ -46,6 +46,14 @@ export function SettingsPage() {
                   className="mt-1.5 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-accent" />
               </div>
               <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Shot Interval (days)</label>
+                <input type="number" min="1" max="30" step="1"
+                  value={settings.shotIntervalDays ?? 7}
+                  onChange={(e) => updateSettings({ shotIntervalDays: parseInt(e.target.value) || 7 })}
+                  className="mt-1.5 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-accent" />
+                <p className="text-xs text-gray-400 mt-1">How many days between injections (default: 7)</p>
+              </div>
+              <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Start Date</label>
                 <input type="date" value={settings.startDate}
                   onChange={(e) => updateSettings({ startDate: e.target.value })}
