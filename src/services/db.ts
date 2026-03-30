@@ -347,6 +347,7 @@ export const dbSettings = {
       reminderHour: data.reminder_hour,
       reminderMinute: data.reminder_minute,
       currentDose: Number(data.current_dose),
+      shotIntervalDays: data.shot_interval_days ? Number(data.shot_interval_days) : 7,
       startDate: data.start_date,
       goalWeightLbs: Number(data.goal_weight_lbs ?? 0),
       heightInches: data.height_inches ? Number(data.height_inches) : undefined,
@@ -358,7 +359,7 @@ export const dbSettings = {
       user_id: uid, weight_unit: s.weightUnit, accent_color: s.accentColor,
       reminder_enabled: s.reminderEnabled, reminder_day_of_week: s.reminderDayOfWeek,
       reminder_hour: s.reminderHour, reminder_minute: s.reminderMinute,
-      current_dose: s.currentDose, start_date: s.startDate,
+      current_dose: s.currentDose, shot_interval_days: s.shotIntervalDays ?? 7, start_date: s.startDate,
       goal_weight_lbs: s.goalWeightLbs, height_inches: s.heightInches ?? null,
       updated_at: new Date().toISOString(),
     })
