@@ -49,7 +49,9 @@ export function CalendarPage() {
       .filter(({ dueDate }) => isSameDay(dueDate, day))
       .map(({ bill, paid }) => ({ name: bill.name, paid }))
     const dayExercises = exercises.filter((e) => e.timestamp.startsWith(dateStr)).map((e) => ({ type: e.type }))
-    const dayWork = workNotes.filter((n) => n.timestamp.startsWith(dateStr)).map((n) => ({ title: n.title }))
+    const dayWork = workNotes.filter((n) => {
+      try { return format(new Date(n.timestamp), 'yyyy-MM-dd') === dateStr } catch { return false }
+    }).map((n) => ({ title: n.title }))
 
     return { shots: dayShots, billsDue: dayBillsDue, billsPaid: dayBillsPaid, exercises: dayExercises, workNotes: dayWork }
   }

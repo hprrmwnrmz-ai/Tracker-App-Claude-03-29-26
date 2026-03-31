@@ -4,6 +4,7 @@ import { Plus, Trash2, Pencil, Search, Pin } from 'lucide-react'
 import { useStore } from '../../store'
 import { PageHeader } from '../../components/layout/PageHeader'
 import { Card } from '../../components/ui/Card'
+import { Modal } from '../../components/ui/Modal'
 import { WorkNote } from '../../types/work'
 import { formatDate } from '../../utils/formatters'
 import { WorkNoteFormModal } from './WorkNoteForm'
@@ -12,6 +13,7 @@ export function WorkPage() {
   const { openDrawer } = useOutletContext<{ openDrawer: () => void }>()
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<WorkNote | undefined>()
+  const [viewingNote, setViewingNote] = useState<WorkNote | undefined>()
   const [query, setQuery] = useState('')
 
   const workNotes = useStore((s) => s.workNotes)
@@ -57,6 +59,7 @@ export function WorkPage() {
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Pinned</p>
             <div className="space-y-2">
               {pinned.map((note) => <NoteCard key={note.id} note={note}
+                onView={() => setViewingNote(note)}
                 onEdit={() => { setEditing(note); setModalOpen(true) }}
                 onDelete={() => deleteWorkNote(note.id)}
                 onTogglePin={() => updateWorkNote(note.id, { pinned: !note.pinned })} />)}
@@ -70,6 +73,7 @@ export function WorkPage() {
             {pinned.length > 0 && <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Notes</p>}
             <div className="space-y-2">
               {unpinned.map((note) => <NoteCard key={note.id} note={note}
+                onView={() => setViewingNote(note)}
                 onEdit={() => { setEditing(note); setModalOpen(true) }}
                 onDelete={() => deleteWorkNote(note.id)}
                 onTogglePin={() => updateWorkNote(note.id, { pinned: !note.pinned })} />)}
@@ -79,18 +83,35 @@ export function WorkPage() {
       </div>
 
       <WorkNoteFormModal open={modalOpen} onClose={() => setModalOpen(false)} editing={editing} />
+
+      {/* View full note modal */}
+      <Modal open={!!viewingNote} onClose={() => setViewingNote(undefined)} title={viewingNote?.title ?? ''}>
+        <div className="space-y-3">
+          {viewingNote?.body && (
+            <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{viewingNote.body}</p>
+          )}
+          {(viewingNote?.tags ?? []).length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {viewingNote!.tags.map((t) => (
+                <span key={t} className="text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full font-medium">{t}</span>
+              ))}
+            </div>
+          )}
+          <p className="text-xs text-gray-400">{formatDate(viewingNote?.timestamp ?? '')}</p>
+        </div>
+      </Modal>
     </div>
   )
 }
 
-function NoteCard({ note, onEdit, onDelete, onTogglePin }: {
-  note: WorkNote; onEdit: () => void; onDelete: () => void; onTogglePin: () => void
+function NoteCard({ note, onView, onEdit, onDelete, onTogglePin }: {
+  note: WorkNote; onView: () => void; onEdit: () => void; onDelete: () => void; onTogglePin: () => void
 }) {
   return (
     <Card padding={false}>
       <div className="px-4 py-3">
         <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
+          <button className="flex-1 min-w-0 text-left active:opacity-70" onClick={onView}>
             <p className="font-semibold text-gray-900 text-sm">{note.title}</p>
             {note.body && <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{note.body}</p>}
             <div className="flex items-center gap-2 mt-1.5">
@@ -99,7 +120,7 @@ function NoteCard({ note, onEdit, onDelete, onTogglePin }: {
                 <span key={t} className="text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full font-medium">{t}</span>
               ))}
             </div>
-          </div>
+          </button>
           <div className="flex gap-1 flex-shrink-0">
             <button onClick={onTogglePin} className={`p-1.5 ${note.pinned ? 'text-yellow-500' : 'text-gray-300'}`}>
               <Pin size={14} />
