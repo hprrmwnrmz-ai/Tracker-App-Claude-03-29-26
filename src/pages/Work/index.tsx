@@ -85,21 +85,23 @@ export function WorkPage() {
       <WorkNoteFormModal open={modalOpen} onClose={() => setModalOpen(false)} editing={editing} />
 
       {/* View full note modal */}
-      <Modal open={!!viewingNote} onClose={() => setViewingNote(undefined)} title={viewingNote?.title ?? ''}>
-        <div className="space-y-3">
-          {viewingNote?.body && (
-            <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{viewingNote.body}</p>
-          )}
-          {(viewingNote?.tags ?? []).length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {viewingNote!.tags.map((t) => (
-                <span key={t} className="text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full font-medium">{t}</span>
-              ))}
-            </div>
-          )}
-          <p className="text-xs text-gray-400">{formatDate(viewingNote?.timestamp ?? '')}</p>
-        </div>
-      </Modal>
+      {viewingNote && (
+        <Modal open onClose={() => setViewingNote(undefined)} title={viewingNote.title}>
+          <div className="space-y-3">
+            {viewingNote.body && (
+              <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">{viewingNote.body}</p>
+            )}
+            {viewingNote.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {viewingNote.tags.map((t) => (
+                  <span key={t} className="text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full font-medium">{t}</span>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-gray-400">{formatDate(viewingNote.timestamp)}</p>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
@@ -111,7 +113,7 @@ function NoteCard({ note, onView, onEdit, onDelete, onTogglePin }: {
     <Card padding={false}>
       <div className="px-4 py-3">
         <div className="flex items-start justify-between gap-2">
-          <button className="flex-1 min-w-0 text-left active:opacity-70" onClick={onView}>
+          <button type="button" className="flex-1 min-w-0 text-left active:opacity-70" onClick={onView}>
             <p className="font-semibold text-gray-900 text-sm">{note.title}</p>
             {note.body && <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{note.body}</p>}
             <div className="flex items-center gap-2 mt-1.5">
@@ -122,11 +124,11 @@ function NoteCard({ note, onView, onEdit, onDelete, onTogglePin }: {
             </div>
           </button>
           <div className="flex gap-1 flex-shrink-0">
-            <button onClick={onTogglePin} className={`p-1.5 ${note.pinned ? 'text-yellow-500' : 'text-gray-300'}`}>
+            <button type="button" onClick={onTogglePin} className={`p-1.5 ${note.pinned ? 'text-yellow-500' : 'text-gray-300'}`}>
               <Pin size={14} />
             </button>
-            <button onClick={onEdit} className="p-1.5 text-gray-400"><Pencil size={14} /></button>
-            <button onClick={onDelete} className="p-1.5 text-red-400"><Trash2 size={14} /></button>
+            <button type="button" onClick={onEdit} className="p-1.5 text-gray-400"><Pencil size={14} /></button>
+            <button type="button" onClick={onDelete} className="p-1.5 text-red-400"><Trash2 size={14} /></button>
           </div>
         </div>
       </div>
